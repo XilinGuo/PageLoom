@@ -9,6 +9,7 @@
 #include <filesystem>
 
 #include "utils.h"
+#include "win32_window.h"
 
 namespace {
 using flutter::EncodableValue;
@@ -91,14 +92,30 @@ CreateDesktopChannel(flutter::BinaryMessenger* messenger, HWND window) {
           ::SecureZeroMemory(output.pbData, output.cbData);
           ::LocalFree(output.pbData);
           result->Success(EncodableValue(std::move(value)));
-        } else if (method == "openPath") {
+        } else if (method == "appVersion") {
+          result->Success(EncodableValue(std::string(FLUTTER_VERSION)));
+        } else if (method == "setThemeMode") {
+          const auto* mode = std::get_if<std::string>(call.arguments());
+          if (!mode || (*mode != "light" && *mode != "dark" && *mode != "system")) {
+            result->Error("invalid_theme");
+            return;
+          }
+          Win32Window::SetThemeMode(window, *mode);
+          result->Success();
+        } else if (method == "openPath" || method == "openUrl") {
           const auto* argument = std::get_if<std::string>(call.arguments());
           if (!argument || argument->empty()) {
             result->Error("invalid_path");
             return;
           }
-          const auto path = std::filesystem::u8path(*argument);
-          const auto handle = ::ShellExecuteW(window, L"open", path.c_str(),
+          if (method == "openUrl" && argument->rfind("https://", 0) != 0) {
+            result->Error("invalid_url");
+            return;
+          }
+          const auto target = method == "openUrl"
+              ? std::wstring(argument->begin(), argument->end())
+              : std::filesystem::u8path(*argument).wstring();
+          const auto handle = ::ShellExecuteW(window, L"open", target.c_str(),
                                              nullptr, nullptr, SW_SHOWNORMAL);
           result->Success(EncodableValue(reinterpret_cast<INT_PTR>(handle) > 32));
         } else {
