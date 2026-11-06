@@ -1,6 +1,9 @@
 .github
 docs
 .git
+.tools/
+dist/
+desktop/
 .pre-commit-config.yaml
 uv.lock
 pdf2zh_files

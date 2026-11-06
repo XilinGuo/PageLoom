@@ -174,3 +174,10 @@ uv.lock
 *.pdf
 *.docx
 CLAUDE.md
+
+# Local desktop toolchains, downloaded runtimes and verification artifacts.
+/.tools/
+
+# Desktop sources covered by the generic Python packaging patterns above.
+!/desktop/lib/
+!/desktop/windows/runner/runner.exe.manifest
