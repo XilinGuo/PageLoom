@@ -25,6 +25,22 @@ PageLoom (译页工坊) is a Windows desktop app built with Flutter. It uses PDF
 - 🎛️ **Control what gets translated.** Select page ranges, adjust PDF output and layout options, and import CSV glossaries or extract terms automatically.
 - 📊 **Follow each job.** See live progress and engine logs, then reopen generated files from the local task history.
 
+## Screenshots
+
+These screenshots show the Flutter interface with sample documents and tasks.
+
+### Translation Workspace
+
+![Translation workspace with a sample PDF, language selectors, and output options](./docs/images/pageloom-workspace.png)
+
+### Translation Settings
+
+![Translation settings with the page range and PDF output controls expanded](./docs/images/pageloom-translation-settings.png)
+
+### Task History
+
+![Task history with sample translation jobs and controls for clearing entries](./docs/images/pageloom-task-history.png)
+
 ## Installation and Usage
 
 ### Installation

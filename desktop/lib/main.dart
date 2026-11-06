@@ -13,7 +13,8 @@ part 'settings_panel.dart';
 
 const windows = MethodChannel('pdfmath/desktop');
 
-const blue = Color(0xff087bf5);
+const blue = Color(0xff145bc6);
+const blueInk = Color(0xff153f80);
 const ink = Color(0xff171d28);
 const muted = Color(0xff515969);
 const background = Color(0xffefedf0);
@@ -34,8 +35,15 @@ Widget buildDesktopApp() => MaterialApp(
     colorScheme: const ColorScheme.light(
       primary: blue,
       onPrimary: Colors.white,
+      primaryContainer: tint,
+      onPrimaryContainer: blueInk,
+      secondary: blue,
+      onSecondary: Colors.white,
+      secondaryContainer: tint,
+      onSecondaryContainer: blueInk,
       surface: paper,
       onSurface: ink,
+      onSurfaceVariant: muted,
     ),
     fontFamily: 'Microsoft YaHei UI',
     inputDecorationTheme: InputDecorationTheme(

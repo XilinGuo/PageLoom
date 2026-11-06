@@ -25,6 +25,22 @@
 - 🎛️ **配置翻译范围和输出。** 支持自定义页码、PDF 输出和高级排版选项，可导入 CSV 术语表或自动提取术语。
 - 📊 **查看任务进度。** 查看实时进度和引擎日志，从本机任务记录打开已生成的文件。
 
+## 界面截图
+
+以下截图使用示例文档和任务展示 Flutter 界面。
+
+### 翻译工作台
+
+![翻译工作台，显示示例 PDF、语言选择和输出选项](./docs/images/pageloom-workspace.png)
+
+### 翻译设置
+
+![翻译设置，已展开页码与 PDF 输出选项](./docs/images/pageloom-translation-settings.png)
+
+### 任务记录
+
+![任务记录，显示示例翻译任务和清理控件](./docs/images/pageloom-task-history.png)
+
 ## 安装与使用
 
 ### 安装

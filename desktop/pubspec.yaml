@@ -1,7 +1,7 @@
 name: pdfmath_desktop
 description: Windows desktop interface for PDFMathTranslate-next.
 publish_to: none
-version: 1.0.0+1
+version: 0.1.1+2
 environment:
   sdk: ^3.8.0
 dependencies:
