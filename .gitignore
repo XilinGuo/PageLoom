@@ -177,6 +177,7 @@ CLAUDE.md
 
 # Local desktop toolchains, downloaded runtimes and verification artifacts.
 /.tools/
+/desktop/assets/fonts/
 
 # Desktop sources covered by the generic Python packaging patterns above.
 !/desktop/lib/

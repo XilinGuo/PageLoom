@@ -1,7 +1,7 @@
 name: pdfmath_desktop
 description: Windows desktop interface for PDFMathTranslate-next.
 publish_to: none
-version: 0.1.1+2
+version: 0.2.0+3
 environment:
   sdk: ^3.8.0
 dependencies:
@@ -11,3 +11,18 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 flutter:
   uses-material-design: true
+  assets:
+    - assets/fonts/HarmonyOS-Sans-LICENSE.txt
+  fonts:
+    - family: MiSans
+      fonts:
+        - asset: assets/fonts/MiSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/MiSans-Bold.ttf
+          weight: 700
+    - family: HarmonyOS Sans
+      fonts:
+        - asset: assets/fonts/HarmonyOS_Sans_SC_Regular.ttf
+          weight: 400
+        - asset: assets/fonts/HarmonyOS_Sans_SC_Bold.ttf
+          weight: 700

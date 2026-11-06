@@ -18,6 +18,7 @@ if (!(Test-Path "$crt/msvcp140.dll")) {
     throw 'Provide the x64 directory of the Visual Studio 2022 MSVC redistributables.'
 }
 
+& (Join-Path $PSScriptRoot 'fetch-fonts.ps1')
 Push-Location $PSScriptRoot
 try {
     & $Flutter build windows --release

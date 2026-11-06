@@ -16,6 +16,9 @@ const stageNames = {
   'Save PDF': '保存 PDF',
 };
 
+const _appearancePage = 4;
+const _aboutPage = 5;
+
 extension _WorkspaceLayout on _DesktopState {
   Widget workspaceFrame() {
     final compact = MediaQuery.sizeOf(context).width < 870;
@@ -63,7 +66,9 @@ extension _WorkspaceLayout on _DesktopState {
                                     ],
                                   ),
                                   2 => settingsPanel(),
-                                  _ => logsPanel(),
+                                  3 => logsPanel(),
+                                  _appearancePage => appearancePanel(),
+                                  _ => const _AboutPage(),
                                 },
                               ),
                       ),
@@ -84,11 +89,13 @@ extension _WorkspaceLayout on _DesktopState {
       (Icons.history_rounded, '任务记录'),
       (Icons.tune_rounded, '翻译设置'),
       (Icons.terminal_rounded, '运行日志'),
+      (Icons.settings_outlined, '设置'),
     ];
+    final selected = page == _aboutPage ? _appearancePage : page;
     return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: Color(0xffe4e2e5),
-        border: Border(right: BorderSide(color: Color(0xffd3d1d6))),
+      decoration: BoxDecoration(
+        color: dark ? const Color(0xff20232b) : const Color(0xffe4e2e5),
+        border: Border(right: BorderSide(color: colors.outlineVariant)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -97,43 +104,16 @@ extension _WorkspaceLayout on _DesktopState {
             padding: const EdgeInsets.fromLTRB(16, 25, 11, 27),
             child: Row(
               children: [
-                Container(
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    color: blue,
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  child: const Icon(
-                    Icons.picture_as_pdf_outlined,
-                    color: Colors.white,
-                    size: 22,
-                  ),
-                ),
+                const PageLoomMark(size: 38),
                 if (!compact) ...[
                   const SizedBox(width: 10),
                   const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'PDFMath',
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        Text(
-                          'TRANSLATE NEXT',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 9,
-                            letterSpacing: 1.1,
-                            color: muted,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      'PageLoom',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ],
@@ -141,8 +121,8 @@ extension _WorkspaceLayout on _DesktopState {
             ),
           ),
           if (!compact)
-            const Padding(
-              padding: EdgeInsets.fromLTRB(22, 0, 12, 9),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(22, 0, 12, 9),
               child: Text('工作区', style: TextStyle(color: muted, fontSize: 12)),
             ),
           for (var index = 0; index < destinations.length; index++)
@@ -151,8 +131,8 @@ extension _WorkspaceLayout on _DesktopState {
               child: Tooltip(
                 message: compact ? destinations[index].$2 : '',
                 child: Material(
-                  color: page == index
-                      ? const Color(0xffd3d1d6)
+                  color: selected == index
+                      ? (dark ? inset : colors.outlineVariant)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(15),
                   child: InkWell(
@@ -166,12 +146,18 @@ extension _WorkspaceLayout on _DesktopState {
                             width: 4,
                             height: 22,
                             decoration: BoxDecoration(
-                              color: page == index ? blue : Colors.transparent,
+                              color: selected == index
+                                  ? colors.primary
+                                  : Colors.transparent,
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
                           const SizedBox(width: 12),
-                          Icon(destinations[index].$1, size: 23, color: ink),
+                          Icon(
+                            destinations[index].$1,
+                            size: 23,
+                            color: colors.onSurface,
+                          ),
                           if (!compact) ...[
                             const SizedBox(width: 12),
                             Text(
@@ -194,15 +180,25 @@ extension _WorkspaceLayout on _DesktopState {
   }
 
   Widget header() {
-    const titles = ['翻译工作台', '任务记录', '翻译设置', '运行日志'];
+    const titles = ['翻译工作台', '任务记录', '翻译设置', '运行日志', '设置', '关于'];
     const subtitles = [
       '保留排版、公式和图表的 PDF 翻译',
       '查看翻译结果和历史任务',
       '配置翻译服务、术语提取和 PDF 排版',
       '查看翻译引擎的进度、警告和错误',
+      '个性化界面主题与字体',
+      '',
     ];
     return Row(
       children: [
+        if (page == _aboutPage) ...[
+          IconButton.filledTonal(
+            tooltip: '返回设置',
+            onPressed: () => update(() => page = _appearancePage),
+            icon: const Icon(Icons.arrow_back_rounded),
+          ),
+          const SizedBox(width: 16),
+        ],
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,19 +211,23 @@ extension _WorkspaceLayout on _DesktopState {
                   height: 1.2,
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                subtitles[page],
-                style: const TextStyle(color: muted, fontSize: 14),
-              ),
+              if (page != _aboutPage) ...[
+                const SizedBox(height: 8),
+                Text(
+                  subtitles[page],
+                  style: TextStyle(color: muted, fontSize: 14),
+                ),
+              ],
             ],
           ),
         ),
-        statusBadge(
-          busy ? '任务运行中' : '工作区就绪',
-          busy ? tint : green,
-          busy ? Icons.sync_rounded : Icons.check_rounded,
-        ),
+        if (page < _appearancePage)
+          statusBadge(
+            busy ? '任务运行中' : '工作区就绪',
+            busy ? colors.primaryContainer : success,
+            busy ? Icons.sync_rounded : Icons.check_rounded,
+            foreground: busy ? colors.onPrimaryContainer : onSuccess,
+          ),
       ],
     );
   }
@@ -259,7 +259,9 @@ extension _WorkspaceLayout on _DesktopState {
       borderRadius: BorderRadius.circular(29),
       child: Stack(
         children: [
-          const Positioned.fill(child: CustomPaint(painter: WavePainter())),
+          Positioned.fill(
+            child: CustomPaint(painter: WavePainter(colors.primaryContainer)),
+          ),
           Padding(
             padding: const EdgeInsets.all(22),
             child: Row(
@@ -284,7 +286,7 @@ extension _WorkspaceLayout on _DesktopState {
                         source ?? '选择本机的 PDF 文件开始翻译',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: muted, fontSize: 12),
+                        style: TextStyle(color: muted, fontSize: 12),
                       ),
                       const SizedBox(height: 18),
                       FilledButton.tonalIcon(
@@ -316,7 +318,9 @@ extension _WorkspaceLayout on _DesktopState {
                                 : null),
                       radius: 47,
                       child: CustomPaint(
-                        painter: FlowerPainter(cancelling ? muted : blue),
+                        painter: FlowerPainter(
+                          cancelling ? colors.outline : colors.primary,
+                        ),
                         child: SizedBox.square(
                           dimension: 83,
                           child: Icon(
@@ -324,7 +328,7 @@ extension _WorkspaceLayout on _DesktopState {
                                 ? Icons.stop_rounded
                                 : Icons.play_arrow_rounded,
                             size: 37,
-                            color: Colors.white,
+                            color: colors.onPrimary,
                           ),
                         ),
                       ),
@@ -361,7 +365,7 @@ extension _WorkspaceLayout on _DesktopState {
             stage,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: muted, fontSize: 13),
+            style: TextStyle(color: muted, fontSize: 13),
           ),
           const SizedBox(height: 13),
           LinearProgressIndicator(
@@ -423,7 +427,7 @@ extension _WorkspaceLayout on _DesktopState {
           ],
         ),
         const SizedBox(height: 15),
-        const Text(
+        Text(
           '输出模式',
           style: TextStyle(color: muted, fontWeight: FontWeight.w600),
         ),
@@ -441,12 +445,14 @@ extension _WorkspaceLayout on _DesktopState {
                     : (_) => update(() => format = item.key),
                 showCheckmark: false,
                 backgroundColor: inset,
-                selectedColor: tint,
+                selectedColor: colors.primaryContainer,
                 side: BorderSide.none,
                 shape: const StadiumBorder(),
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: format == item.key ? blueInk : ink,
+                  color: format == item.key
+                      ? colors.onPrimaryContainer
+                      : colors.onSurface,
                 ),
               ),
           ],
@@ -487,10 +493,7 @@ extension _WorkspaceLayout on _DesktopState {
           const PanelTitle(Icons.inventory_2_outlined, '输出文件'),
           const SizedBox(height: 16),
           if (error case final String message)
-            SelectableText(
-              message,
-              style: const TextStyle(color: Color(0xffaa2433)),
-            )
+            SelectableText(message, style: TextStyle(color: colors.error))
           else if (entry != null && entry['status'] == '已完成')
             ...resultButtons(entry)
           else
@@ -559,14 +562,14 @@ extension _WorkspaceLayout on _DesktopState {
               if (selectedHistory.isNotEmpty)
                 Text(
                   '已选 ${selectedHistory.length} 条',
-                  style: const TextStyle(color: muted),
+                  style: TextStyle(color: muted),
                 ),
             ],
           ),
           const SizedBox(height: 12),
           if (historyError)
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
               child: Text('本地记录读取或保存失败。', style: TextStyle(color: muted)),
             ),
           if (!historyLoaded || historyCleaning)
@@ -615,8 +618,9 @@ extension _WorkspaceLayout on _DesktopState {
         ),
         trailing: statusBadge(
           entry['status'] as String,
-          completed ? green : paper,
+          completed ? success : colors.surface,
           completed ? Icons.check_rounded : Icons.info_outline_rounded,
+          foreground: completed ? onSuccess : colors.onSurface,
         ),
         onTap: completed
             ? () => showDialog<void>(
@@ -690,7 +694,7 @@ extension _WorkspaceLayout on _DesktopState {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(fontSize: 11, color: muted)),
+                Text(label, style: TextStyle(fontSize: 11, color: muted)),
                 Text(
                   options[value] ?? value,
                   overflow: TextOverflow.ellipsis,
@@ -782,66 +786,78 @@ class _ChoiceDialogState extends State<ChoiceDialog> {
   }
 }
 
-Widget panel({
-  required Widget child,
-  EdgeInsetsGeometry padding = const EdgeInsets.all(22),
-}) {
-  return Container(
-    padding: padding,
-    decoration: BoxDecoration(
-      color: paper,
-      borderRadius: BorderRadius.circular(29),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x110d182b),
-          blurRadius: 8,
-          offset: Offset(0, 3),
-        ),
-      ],
-    ),
-    child: child,
-  );
-}
-
-Widget statusBadge(String text, Color color, IconData icon) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
-    decoration: ShapeDecoration(color: color, shape: const StadiumBorder()),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 15, color: ink),
-        if (text.isNotEmpty) ...[
-          const SizedBox(width: 5),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+extension _Panels on _DesktopState {
+  Widget panel({
+    required Widget child,
+    EdgeInsetsGeometry padding = const EdgeInsets.all(22),
+  }) {
+    return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(29),
+        boxShadow: [
+          BoxShadow(
+            color: dark ? const Color(0x40000000) : const Color(0x110d182b),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
-      ],
-    ),
-  );
-}
+      ),
+      child: child,
+    );
+  }
 
-Widget emptyState(IconData icon, String title, String body) {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(18),
-    decoration: BoxDecoration(
-      color: inset,
-      borderRadius: BorderRadius.circular(19),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: muted, size: 23),
-        const SizedBox(height: 9),
-        Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
-        const SizedBox(height: 4),
-        Text(body, style: const TextStyle(color: muted, fontSize: 12)),
-      ],
-    ),
-  );
+  Widget statusBadge(
+    String text,
+    Color color,
+    IconData icon, {
+    Color? foreground,
+  }) {
+    final textColor = foreground ?? colors.onSurface;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+      decoration: ShapeDecoration(color: color, shape: const StadiumBorder()),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 15, color: textColor),
+          if (text.isNotEmpty) ...[
+            const SizedBox(width: 5),
+            Text(
+              text,
+              style: TextStyle(
+                color: textColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget emptyState(IconData icon, String title, String body) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: inset,
+        borderRadius: BorderRadius.circular(19),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: muted, size: 23),
+          const SizedBox(height: 9),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+          const SizedBox(height: 4),
+          Text(body, style: TextStyle(color: muted, fontSize: 12)),
+        ],
+      ),
+    );
+  }
 }
 
 class PanelTitle extends StatelessWidget {
@@ -852,7 +868,11 @@ class PanelTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Row(
     children: [
-      Icon(icon, color: muted, size: 20),
+      Icon(
+        icon,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        size: 20,
+      ),
       const SizedBox(width: 8),
       Text(
         text,
@@ -863,7 +883,8 @@ class PanelTitle extends StatelessWidget {
 }
 
 class WavePainter extends CustomPainter {
-  const WavePainter();
+  const WavePainter(this.color);
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -877,11 +898,11 @@ class WavePainter extends CustomPainter {
       ..lineTo(size.width, h)
       ..lineTo(size.width, 0)
       ..close();
-    canvas.drawPath(path, Paint()..color = tint);
+    canvas.drawPath(path, Paint()..color = color);
   }
 
   @override
-  bool shouldRepaint(WavePainter oldDelegate) => false;
+  bool shouldRepaint(WavePainter oldDelegate) => oldDelegate.color != color;
 }
 
 class FlowerPainter extends CustomPainter {

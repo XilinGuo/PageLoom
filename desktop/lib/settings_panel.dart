@@ -230,7 +230,7 @@ extension _SettingsPanel on _DesktopState {
                 ],
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 '修改立即用于新任务。保存后，设置由当前 Windows 用户加密保留。',
                 style: TextStyle(color: muted),
               ),
@@ -279,7 +279,7 @@ extension _SettingsPanel on _DesktopState {
                 (id) => update(() => settings.termEngine = id),
               ),
               if (!canExtract)
-                const Text(
+                Text(
                   '当前主服务不支持自动术语提取。可在此单独选择一个支持的服务。',
                   style: TextStyle(color: muted),
                 ),
@@ -647,7 +647,7 @@ extension _SettingsPanel on _DesktopState {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: muted)),
+        Text(label, style: TextStyle(color: muted)),
         const SizedBox(height: 5),
         Wrap(
           spacing: 6,
@@ -756,10 +756,7 @@ extension _SettingsPanel on _DesktopState {
             ],
           ),
           const SizedBox(height: 10),
-          const Text(
-            '本次会话最多保留 1500 条日志，最新消息在上方。',
-            style: TextStyle(color: muted),
-          ),
+          Text('本次会话最多保留 1500 条日志，最新消息在上方。', style: TextStyle(color: muted)),
           const SizedBox(height: 14),
           if (visible.isEmpty)
             emptyState(Icons.terminal_rounded, '暂无日志', '翻译进度和后台消息会显示在这里。')
@@ -784,9 +781,12 @@ extension _SettingsPanel on _DesktopState {
                         fontFamily: 'Consolas',
                         fontSize: 12,
                         color: switch (level) {
-                          'ERROR' || 'CRITICAL' => const Color(0xffaa2433),
-                          'WARNING' => const Color(0xff805700),
-                          _ => ink,
+                          'ERROR' || 'CRITICAL' => colors.error,
+                          'WARNING' =>
+                            dark
+                                ? const Color(0xffffc475)
+                                : const Color(0xff805700),
+                          _ => colors.onSurface,
                         },
                       ),
                     ),

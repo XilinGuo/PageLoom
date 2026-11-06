@@ -7,6 +7,7 @@ PageLoom 的桌面界面基于 Flutter 构建。在 Windows 10 / 11 x64 上打�
 3. 点击「保存设置」可保留配置。设置文件使用 Windows 用户级加密，API Key 随配置一起加密保存。
 4. 点击蓝色播放按钮。完成后可打开 PDF、已生成的术语表或输出目录。每个任务使用单独的输出子目录，避免覆盖已有结果。
 5. 「运行日志」实时显示后台进度、警告和错误，支持筛选、复制和清空。日志只保留在当前会话。「任务记录」保存在当前 Windows 用户的数据目录。
+6. 在「设置」选择跟随系统、亮色或暗色主题，以及 MiSans、HarmonyOS Sans 或微软雅黑 UI。外观选择自动保存。「关于」提供版本、项目链接和字体许可。
 
 ## 源码目录
 
@@ -29,5 +30,7 @@ SDK、下载的运行时和测试产物可放在仓库根目录的 `.tools/`。�
 从仓库根目录运行以下命令。VCRedistX64 指向包含 Microsoft.VC143.CRT 和 Microsoft.VC143.OpenMP 的 MSVC x64 目录。
 
     ./desktop/package-windows.ps1 -Flutter <flutter.bat> -EngineDirectory <解压后的pdf2zh目录> -VCRedistX64 <MSVC重分发x64目录>
+
+打包脚本会从官方渠道下载原版 [MiSans](https://hyperos.mi.com/font/zh/download/) 和 [HarmonyOS Sans](https://developer.huawei.com/consumer/cn/design/resource/) 界面字体并验证校验值。直接运行 `flutter build` 或 `flutter run` 前，先执行 `./desktop/fetch-fonts.ps1`。
 
 成功后生成 dist/PDFMathTranslate-Windows-x64。项目按仓库根目录中的 AGPL-3.0 许可证发布。

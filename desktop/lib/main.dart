@@ -10,58 +10,29 @@ import 'package:flutter/services.dart';
 part 'workspace.dart';
 part 'settings.dart';
 part 'settings_panel.dart';
+part 'appearance.dart';
 
 const windows = MethodChannel('pdfmath/desktop');
 
-const blue = Color(0xff145bc6);
-const blueInk = Color(0xff153f80);
-const ink = Color(0xff171d28);
-const muted = Color(0xff515969);
-const background = Color(0xffefedf0);
-const paper = Color(0xfffaf8fa);
-const inset = Color(0xffeeedf0);
-const tint = Color(0xffdfe9fa);
-const green = Color(0xffa4f89d);
+void main() => runApp(const PageLoomApp());
 
-void main() => runApp(buildDesktopApp());
-
-Widget buildDesktopApp() => MaterialApp(
-  title: 'PDFMathTranslate',
-  debugShowCheckedModeBanner: false,
-  theme: ThemeData(
-    useMaterial3: true,
-    splashFactory: NoSplash.splashFactory,
-    scaffoldBackgroundColor: background,
-    colorScheme: const ColorScheme.light(
-      primary: blue,
-      onPrimary: Colors.white,
-      primaryContainer: tint,
-      onPrimaryContainer: blueInk,
-      secondary: blue,
-      onSecondary: Colors.white,
-      secondaryContainer: tint,
-      onSecondaryContainer: blueInk,
-      surface: paper,
-      onSurface: ink,
-      onSurfaceVariant: muted,
-    ),
-    fontFamily: 'Microsoft YaHei UI',
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: inset,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(17),
-        borderSide: BorderSide.none,
-      ),
-    ),
-  ),
-  home: const Desktop(),
-);
+Directory get appDataDirectory {
+  final local =
+      Platform.environment['LOCALAPPDATA'] ?? Directory.systemTemp.path;
+  return Directory('$local${Platform.pathSeparator}PDFMathTranslateDesktop');
+}
 
 class Desktop extends StatefulWidget {
-  const Desktop({super.key, this.historyStorage});
+  const Desktop({
+    super.key,
+    this.historyStorage,
+    this.appearance = const Appearance(),
+    this.onAppearanceChanged,
+  });
 
   final File? historyStorage;
+  final Appearance appearance;
+  final Future<void> Function(Appearance)? onAppearanceChanged;
   @override
   State<Desktop> createState() => _DesktopState();
 }
@@ -99,9 +70,7 @@ class _DesktopState extends State<Desktop> {
 
   File get historyFile {
     if (widget.historyStorage case final File file) return file;
-    final local =
-        Platform.environment['LOCALAPPDATA'] ?? Directory.systemTemp.path;
-    return File('$local\\PDFMathTranslateDesktop\\history.json');
+    return File.fromUri(appDataDirectory.uri.resolve('history.json'));
   }
 
   @override
