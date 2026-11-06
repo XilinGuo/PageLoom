@@ -1,6 +1,6 @@
 # PageLoom · Windows 打包说明
 
-在 Windows 10 / 11 x64 上打开便携目录中的 **PDFMathTranslate.exe**。移动或复制时请保留整个目录。目录包含 Flutter、Python、翻译引擎、排版模型、字体和 VC++ 运行库。
+PageLoom 的桌面界面基于 Flutter 构建。在 Windows 10 / 11 x64 上打开解压目录中的 **PDFMathTranslate.exe**。移动或复制时请保留整个目录。目录包含 Flutter、Python、翻译引擎、排版模型、字体和 VC++ 运行库。
 
 1. 在「翻译工作台」选择 PDF、源语言和目标语言。可选页码范围、单语或双语输出。
 2. 在「翻译设置」选择 Web 版提供的翻译服务，配置请求速率、术语提取、CSV 术语表、PDF 输出和高级排版。默认使用 Bing。在线服务需要联网，部分服务需要 API Key 或另行部署服务。
@@ -15,10 +15,10 @@
 | `desktop/lib/` | Flutter 界面、翻译设置和任务记录 |
 | `desktop/windows/` | Windows 启动器和系统接口 |
 | `desktop/backend/bridge.py` | 连接 Flutter 与 PDFMathTranslate-next Python API |
-| `desktop/package-windows.ps1` | 构建并组装 Windows x64 便携包 |
+| `desktop/package-windows.ps1` | 构建并组装 Windows x64 发布包 |
 | `pdf2zh_next/` | PDFMathTranslate-next 翻译引擎与 Web 界面 |
 
-SDK、下载的运行时和测试产物可放在仓库根目录的 `.tools/`。生成的便携包放在 `dist/`。这两个目录均已排除在 Git 之外。
+SDK、下载的运行时和测试产物可放在仓库根目录的 `.tools/`。生成的发布包放在 `dist/`。这两个目录均已排除在 Git 之外。
 
 <a id="from-source"></a>
 

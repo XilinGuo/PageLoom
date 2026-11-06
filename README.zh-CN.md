@@ -10,7 +10,13 @@
 
 </div>
 
-译页工坊基于 PDFMathTranslate-next 和 BabelDOC，提供便携式 PDF 翻译界面，适合处理学术论文、技术手册和其他排版复杂的文档。
+译页工坊是基于 Flutter 构建的 Windows 桌面应用，使用 PDFMathTranslate-next 和 BabelDOC 翻译学术论文、技术手册及其他排版复杂的 PDF。
+
+<p align="center">
+  <img src="./docs/images/pageloom-desktop-preview.png" alt="笔记本电脑中的译页工坊翻译工作台演示图" width="960">
+  <br>
+  <sub>桌面界面示意图</sub>
+</p>
 
 ## 主要功能
 
@@ -23,11 +29,11 @@
 
 ### 安装
 
-1. 发布便携包后，在本仓库的 Releases 页面下载 **Windows x64 便携 ZIP**。
+1. 在 [Releases](https://github.com/XilinGuo/PageLoom/releases) 页面下载 **Windows x64 ZIP**。
 2. 完整解压 ZIP。移动程序时请将启动文件和同目录的依赖一起移动。
 3. 双击 `PDFMathTranslate.exe`，这是当前构建的启动文件名。
 
-便携包内含 Flutter 和 Python 运行时、翻译引擎、排版模型和字体。在线翻译服务需要联网，部分服务需要 API Key 或单独运行的服务。
+下载包内含所需的运行时、翻译引擎、排版模型和字体。在线翻译服务需要联网，部分服务需要 API Key 或单独运行的服务。
 
 ### 使用
 

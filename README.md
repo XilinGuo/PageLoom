@@ -10,7 +10,13 @@
 
 </div>
 
-PageLoom (译页工坊) is a portable PDF translation desktop app based on PDFMathTranslate-next and BabelDOC. It is designed for papers, technical manuals, and other documents where layout matters.
+PageLoom (译页工坊) is a Windows desktop app built with Flutter. It uses PDFMathTranslate-next and BabelDOC to translate papers, technical manuals, and other PDFs where layout matters.
+
+<p align="center">
+  <img src="./docs/images/pageloom-desktop-preview.png" alt="Illustration of the PageLoom translation workspace on a laptop" width="960">
+  <br>
+  <sub>Illustration of the desktop interface</sub>
+</p>
 
 ## Features
 
@@ -23,11 +29,11 @@ PageLoom (译页工坊) is a portable PDF translation desktop app based on PDFMa
 
 ### Installation
 
-1. Download the **Windows x64 portable ZIP** from this repository’s Releases page when a build is available.
+1. Download the **Windows x64 ZIP** from [Releases](https://github.com/XilinGuo/PageLoom/releases).
 2. Extract the whole ZIP to a folder. Keep the executable and its companion files together when moving the app.
 3. Double-click `PDFMathTranslate.exe`, the launcher name used by the current build.
 
-The portable package includes the Flutter and Python runtimes, the translation engine, layout models, and fonts. Online translation providers require a network connection. Some providers also require an API key or a separately running service.
+The download includes the required runtimes, translation engine, layout models, and fonts. Online translation providers require a network connection. Some providers also require an API key or a separately running service.
 
 ### Usage
 
